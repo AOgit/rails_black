@@ -1,0 +1,23 @@
+<p></p>
+<a href="/groups">Dashboard</a>
+<h1><%= @org.name %></h1>
+<form action='/joins' method='post'>
+    <input type='hidden' name='authenticity_token' value='<%= form_authenticity_token %>'>
+    <input type='hidden' name='org_id' value='<%= @org.id %>'>
+    <% if @org.users.where(id: current_user.id).first %>
+      <input type='submit' value='Leave Group'>
+      <input type='hidden' name='_method' value='delete'>
+    <% else %>
+      <input type='submit' value='Join Group'>
+    <% end %>
+</form>
+<h2><%= @org.description %></h2>
+<% if Org.find(@org.id).user_id == current_user.id %>
+  <h2>Created by: YOU</h2>
+<% else %>
+  <h2>Created by: <%= @org.user.first_name %> <%= @org.user.last_name %></h2>
+<% end %>
+<h3>Members:</h3>
+<% @org.users.each do |mem| %>
+	<h3><%= mem.first_name %> <%= mem.last_name %></h3>
+<% end %>

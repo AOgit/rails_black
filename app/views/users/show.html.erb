@@ -1,0 +1,26 @@
+<h2>Hi <%= @user.first_name %> <%= @user.last_name %>!</h2>
+<h3>Here are the organizations you may join:</h3>
+<% @orgs.each do |org| %>
+<div id="box">
+  <a href="/groups/<%= org.id %>"><%= org.name %></a>
+  <p>Members: <%= Org.find(org.id).users.count %></p>
+  <p><%= org.description %></p>
+  <% if Org.find(org.id).user_id == current_user.id %>
+    <a href="/org/destroy/<%= org.id %>" data-method="delete" rel="nofollow">Delete</a>
+  <% end %>
+</div>
+<% end %>
+<% if flash[:norg_errors] %>
+  <% flash[:norg_errors].each do |e| %>
+    <p><%= e %></p>
+  <% end %>
+<% end %>
+<h3>Create a new organization</h3>
+<form action="/org/create/<%= @user.id %>" method="post">
+	<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+    <label for="org_name">Org Name:</label>
+	<input type="text" name="org_name" id="org_name">
+	<label for="desc">Description:</label>
+	<textarea rows="4" cols="50" name="desc" id="desc"></textarea>
+	<input type="submit" value="Create">
+</form>
